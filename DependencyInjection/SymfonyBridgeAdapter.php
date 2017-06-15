@@ -80,6 +80,7 @@ class SymfonyBridgeAdapter
             $type       => array(),
             'type'      => $type,
             'namespace' => null,
+            'lazy'      => false
         );
 
         if ( ! isset($cacheDriver['namespace'])) {
