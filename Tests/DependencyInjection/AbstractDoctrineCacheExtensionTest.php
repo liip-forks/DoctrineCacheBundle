@@ -273,6 +273,24 @@ abstract class AbstractDoctrineCacheExtensionTest extends TestCase
         $this->compileContainer('unrecognized');
     }
 
+    public function testLazy()
+    {
+        $container = $this->compileContainer('lazy');
+
+        $providers = array(
+            'doctrine_cache.providers.lazy_provider' => true,
+            'doctrine_cache.providers.lazy_false_provider' => false,
+            'doctrine_cache.providers.lazy_no_provider'   => false,
+        );
+
+        foreach ($providers as $key => $lazy) {
+            $this->assertTrue($container->hasDefinition($key));
+            $definition = $container->getDefinition($key);
+            $this->assertTrue($definition->isLazy() == $lazy);
+        }
+
+    }
+
     public function testAcl()
     {
         $container = $this->compileContainer('acl');
@@ -298,7 +316,6 @@ abstract class AbstractDoctrineCacheExtensionTest extends TestCase
 
         $this->assertTrue($definition->isPublic());
         $this->assertEquals($class, $definition->getClass());
-
         foreach (array_unique($expectedCalls) as $methodName => $params) {
             $this->assertMethodCall($definition, $methodName, $params);
         }
